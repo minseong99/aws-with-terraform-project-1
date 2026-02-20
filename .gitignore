@@ -1,0 +1,13 @@
+# local download plugin
+**/.terraform/*
+
+# state file
+*.tfstate
+*.tfstate.*
+
+# sensitive file 
+*.tfvars
+*.tfvars.json
+
+# plan file
+*tfplan*
