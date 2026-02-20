@@ -4,10 +4,13 @@ name: "Terraform CI/CD Pipeline"
 on:
   push:
     branches:
-      - main  # mainブランチにコードをpushする時実行
+      - main  # mainブランチにコードにpushする時prod directoryがpushされる
+      - develop # developブランチにpushする時dev directoryがpushされる
   pull_request:
+    # PR(Pull Request)をした時planのために実行
     branches:
-      - main  # PR(Pull Request)をした時planのために実行
+      - main  
+      - develop
 
 # [重要] OIDC 認証のためGitHubにトーコン発給権限を許容します。 
 permissions:
@@ -19,15 +22,27 @@ jobs:
     name: "Terraform Deploy & DX Error Handling"
     runs-on: ubuntu-latest
 
+    # 環境によって Dynamic directory allocation
+    env:
+      TF_WORKING_DIR: ${{ (github.base_ref == 'main' || github.ref_name == 'main') && './workspace/prod' || './workspace/dev'}}
+
     # 作業デイレクトの指定
     defaults:
       run:
-        working-directory: ./workspace/dev
+        working-directory: ${{ env.TF_WORKING_DIR }}
 
     steps:
       # 1. コードの取得
       - name: Checkout Code
         uses: actions/chekout@v6
+
+      ## 現在の ENV　確認
+      - name: Environment Check
+        run: |
+          echo "Trigger Event: ${{ github.event_name }}"
+          echo "Target Branch: ${{ github.ref_name }}"
+          echo "Selected Directory: ${{ env.TF_WORKING_DIR }}"
+          echo "### Deploying to: ${{ env.TF_WORKING_DIR }}" >> $GITGUB_STEP_SUMMARY  
 
       # 2. AWS OIDC認証
       - name: Configure AWS Credentials
@@ -90,7 +105,7 @@ jobs:
       # 8-1　本番環境への適用
       - name: Terraform Apply
         id: apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.event_name == 'push'
         run: terraform apply -auto-approve
       
       - name: Apply Error Report
