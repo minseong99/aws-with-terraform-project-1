@@ -1,0 +1,103 @@
+name: "Terraform CI/CD Pipeline"
+
+# パイプラインの実行条件
+on:
+  push:
+    branches:
+      - main  # mainブランチにコードをpushする時実行
+  pull_request:
+    branches:
+      - main  # PR(Pull Request)をした時planのために実行
+
+# [重要] OIDC 認証のためGitHubにトーコン発給権限を許容します。 
+permissions:
+  id-token: write   # AWSとOIDC通信のてめ必須権限
+  contents: read    # Gitリポジトリのコードを読むための権限
+
+jobs:
+  terraform:
+    name: "Terraform Deploy & DX Error Handling"
+    runs-on: ubuntu-latest
+
+    # 作業デイレクトの指定
+    defaults:
+      run:
+        working-directory: ./workspace/dev
+
+    steps:
+      # 1. コードの取得
+      - name: Checkout Code
+        uses: actions/chekout@v6
+
+      # 2. AWS OIDC認証
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-northeast-1
+
+      # 3. Terraform　のインストール
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3 
+
+      # 4. Terraform 初期化
+      - name: Terraform Init
+        id: init
+        run: terraform init 
+      
+      # 5-1. format check
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check 
+
+      # format error 
+      - name: Format Error Report
+        if: failure() && steps.fmt.outcome == 'failure'
+        run: |
+          echo "::error title=Format Error::コードのフオーメットに問題がおります。"
+          echo "### Terraform Format 失敗" >> $GITHUB_STEP_SUMMARY
+          echo "コードのインデントや改行がHashiCorpの標準規約に違反sています。" >> $GITHUB_STEP_SUMMARY
+          echo "- **解決策:※＊ローカル環境で \'terraform fmt'\　を実行し、修正をコミットしてください。” >> $GITHUB_STEP_SUMMARY
+      
+      # 6-1構文とロジック検証
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+      # validation error 処理
+      - name: Validate Error Report 
+        if: failure() && steps.validate.outcome == 'failure'
+        run: |
+          echo "::error title=Validation Error::変数の未定義や構文エラーなどの論理的な欠陥があります。"
+          echo "### 🚨 Terraform Validate 失敗 (논리 문법 실패)" >> $GITHUB_STEP_SUMMARY
+          echo "記述された \`.tf\` ファイル内に致命的な構文エラー（Syntax Error）が含まれています。" >> $GITHUB_STEP_SUMMARY
+          echo "- **主な原因:** 存在しない変数の参照、タイポ、必須パラメータの欠落など。" >> $GITHUB_STEP_SUMMARY
+          echo "- **解決策:** ターミナルのログ（Raw Log）を確認し、該当行のコードを修正してください。" >> $GITHUB_STEP_SUMMARY
+
+      # 7-1 インフラ変更の計画作成
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+      #　プランエラー処理
+      - name: Plan Error Report
+        if: failure() && steps.plan.outcome == 'failure'
+        run: |
+          echo "::error title=Plan Error::AWS APIとの通信エラー、または権限不足が発生しました。"
+          echo "### 🚨 Terraform Plan 失敗 (계획 생성 실패)" >> $GITHUB_STEP_SUMMARY
+          echo "AWS環境のリソース状態を読み取る際、または変更を計画する際にエラーが発生しました。" >> $GITHUB_STEP_SUMMARY
+          echo "- **主な原因:** IAM権限（Role）の不足、または既存のAWSリソースとの深刻な競合。" >> $GITHUB_STEP_SUMMARY
+          echo "- **解決策:** AWSの認証情報（OIDC）とTerraformの状態ファイル（tfstate）を確認してください。" >> $GITHUB_STEP_SUMMARY
+      
+      # 8-1　本番環境への適用
+      - name: Terraform Apply
+        id: apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+      
+      - name: Apply Error Report
+        if: failure() && steps.apply.outcome == 'failure'
+        run: |
+          echo "::error title=Apply Error::インフラの構築中に致命的な障害が発生しました。即時対応が必要です。"
+          echo "### 💥 Terraform Apply 失敗 (배포 치명적 실패)" >> $GITHUB_STEP_SUMMARY
+          echo "インフラのプロビジョニング中にAWS側でエラーが発生し、デプロイが中断されました。" >> $GITHUB_STEP_SUMMARY
+          echo "- **影響:** システムが不完全な状態（Partial State）になっている可能性があります。" >> $GITHUB_STEP_SUMMARY
+          echo "- **緊急措置:** AWSマネジメントコンソール及びログを直ちに確認し、手動でのロールバックまたは修正を行ってください。" >> $GITHUB_STEP_SUMMARY
