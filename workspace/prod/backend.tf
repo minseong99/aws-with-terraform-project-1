@@ -3,7 +3,7 @@ terraform {
     bucket         = "my-unique-tfstate-bucket-minseong99-b9uqxxnj"
     region         = "ap-northeast-1"
     dynamodb_table = "my-tf-lock-table"
-    key            = "dev/terraform.tfstate"
+    key            = "prod/terraform.tfstate"
     encrypt        = true
   }
 }
