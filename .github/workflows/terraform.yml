@@ -42,7 +42,7 @@ jobs:
           echo "Trigger Event: ${{ github.event_name }}"
           echo "Target Branch: ${{ github.ref_name }}"
           echo "Selected Directory: ${{ env.TF_WORKING_DIR }}"
-          echo "### Deploying to: ${{ env.TF_WORKING_DIR }}" >> $GITGUB_STEP_SUMMARY  
+          echo "### Deploying to: ${{ env.TF_WORKING_DIR }}" >> $GITHUB_STEP_SUMMARY  
 
       # 2. AWS OIDC認証
       - name: Configure AWS Credentials
