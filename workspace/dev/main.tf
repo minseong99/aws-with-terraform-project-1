@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = var.aws-region
+  region = var.aws-region
   # profile = var.aws-profile
 
   default_tags {
