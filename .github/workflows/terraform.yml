@@ -34,7 +34,7 @@ jobs:
     steps:
       # 1. コードの取得
       - name: Checkout Code
-        uses: actions/chekout@v4
+        uses: actions/checkout@v6
 
       ## 現在の ENV　確認
       - name: Environment Check
