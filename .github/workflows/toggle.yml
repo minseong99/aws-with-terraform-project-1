@@ -1,4 +1,4 @@
-name: "Toggle Nat Gateway"
+name: "Toggle Nat Gateway/ASG/Bastion host"
 
 on:
     workflow_dispatch:
@@ -53,5 +53,8 @@ jobs:
             - name: Terraform Init
               run: terraform init
             
-            - name: Terraform Apply(Toggle Nat)
-              run: terraform apply -auto-approve -var="enable-nat-gateway=${{ github.event.inputs.action }}"
+            - name: Terraform Apply
+              run: |
+                terraform apply -auto-approve \
+                -var="enable_nat_gateway=${{ github.event.inputs.action }}" \
+                -var="enable_compute=${{ github.event.inputs.action }}"

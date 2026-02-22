@@ -20,6 +20,11 @@ variable "enable-nat-gateway" {
   description = "NAT Gateway 生成するトリガー"
   type        = bool
   default     = false #　費用の問題のせいで一般的にはNAT Gatewayを破壊する
+}
 
+variable "enable-compute" {
+  description = "ASG および Bastion host 生成トリガー"
+  type = bool
+  default = false
 }
 
