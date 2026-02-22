@@ -25,7 +25,8 @@ jobs:
             TF_WORKING_DIR: ${{ (github.base_ref == 'main' || github.ref_name == 'main') && './workspace/prod' || './workspace/dev'}}
         defaults:
             run:
-                working-directory: ${{env.TF_WORKING_DIR}}
+                #$ {{env.TF_WORKING_DIR}}
+                working-directory: ./workspace/dev
         
         steps:
             - name: Checkout Code
