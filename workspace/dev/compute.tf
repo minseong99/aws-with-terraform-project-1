@@ -73,6 +73,9 @@ resource "aws_autoscaling_group" "web_asg" {
     version = "$Latest"
   }
 
+  ## load balancerアクセス
+  target_group_arns = [aws_lb_target_group.web.arn]
+
   health_check_grace_period = 300
   health_check_type         = "EC2"
 }
