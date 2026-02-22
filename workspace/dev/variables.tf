@@ -24,7 +24,7 @@ variable "enable-nat-gateway" {
 
 variable "enable-compute" {
   description = "ASG および Bastion host 生成トリガー"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
