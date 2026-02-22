@@ -1,3 +1,4 @@
 # ３－tierアーキテクチャ設計
 アーキテクチャのイメージ
-<img width="1171" height="601" alt="final drawio" src="https://github.com/user-attachments/assets/4cfc22aa-015e-4b7e-a839-795ee80897f3" />
+
+<img width="1171" height="601" alt="final drawio (1)" src="https://github.com/user-attachments/assets/7c760101-8f81-4007-b1fb-ef900fc4e605" />
