@@ -54,4 +54,4 @@ jobs:
               run: terraform init
             
             - name: Terraform Apply(Toggle Nat)
-              run: terraform apply -auto-approve -var="enable_nat_gateway=${{ github.event.inputs.action }}"
+              run: terraform apply -auto-approve -var="enable-nat-gateway=${{ github.event.inputs.action }}"
