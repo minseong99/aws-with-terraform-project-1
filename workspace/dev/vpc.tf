@@ -124,9 +124,9 @@ resource "aws_route_table_association" "privates" {
 resource "aws_route" "private-nat-access" {
   count = var.enable-nat-gateway ? 1 : 0
 
-  route_table_id = aws_route_table.private-rt.id
+  route_table_id         = aws_route_table.private-rt.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.ng-public-a[0].id
+  nat_gateway_id         = aws_nat_gateway.ng-public-a[0].id
 }
 
 
