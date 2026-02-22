@@ -23,4 +23,5 @@ locals {
       is_public         = false
     }
   }
+  alb_port = [80, 443]
 }
