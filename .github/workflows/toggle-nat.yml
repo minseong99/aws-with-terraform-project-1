@@ -1,0 +1,56 @@
+name: "Toggle Nat Gateway"
+
+on:
+    workflow_dispatch:
+        inputs:
+            action:
+                description: 'Nat Gateway 状態選択（true=生成、false=削除）'
+                required: true
+                default: 'false'
+                type: choice
+                options:
+                    - 'true'
+                    - 'false'
+
+permissions:
+    id-token: write
+    contents: read
+
+jobs:
+    toggle-nat:
+        runs-on: ubuntu-latest
+
+    # 環境によって Dynamic directory allocation
+        env:
+            TF_WORKING_DIR: ${{ (github.base_ref == 'main' || github.ref_name == 'main') && './workspace/prod' || './workspace/dev'}}
+        defaults:
+            run:
+                working-directory: ${{env.TF_WORKING_DIR}}
+        
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v6
+
+
+            ## 現在の ENV　確認
+            - name: Environment Check
+              run: |
+                    echo "Trigger Event: ${{ github.event_name }}"
+                    echo "Target Branch: ${{ github.ref_name }}"
+                    echo "Selected Directory: ${{ env.TF_WORKING_DIR }}"
+                    echo "### Deploying to: ${{ env.TF_WORKING_DIR }}" >> $GITHUB_STEP_SUMMARY  
+
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                aws-region: ap-northeast-1
+            
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+            
+            - name: Terraform Init
+              run: terraform init
+            
+            - name: Terraform Apply(Toggle Nat)
+              run: terraform apply -auto-approve -var="enable_nat_gateway=${{ github.event.inputs.action }}"
