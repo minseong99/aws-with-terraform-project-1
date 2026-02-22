@@ -15,3 +15,11 @@ variable "environment" {
   type        = string
   default     = "dev"
 }
+
+variable "enable-nat-gateway" {
+  description = "NAT Gateway 生成するトリガー"
+  type        = bool
+  default     = false #　費用の問題のせいで一般的にはNAT Gatewayを破壊する
+
+}
+
