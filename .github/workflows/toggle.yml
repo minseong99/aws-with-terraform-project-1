@@ -56,5 +56,5 @@ jobs:
             - name: Terraform Apply
               run: |
                 terraform apply -auto-approve \
-                -var="enable_nat_gateway=${{ github.event.inputs.action }}" \
-                -var="enable_compute=${{ github.event.inputs.action }}"
+                -var="enable-nat-gateway=${{ github.event.inputs.action }}" \
+                -var="enable-compute=${{ github.event.inputs.action }}"
