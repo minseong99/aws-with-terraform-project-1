@@ -7,7 +7,7 @@ resource "aws_lb" "main" {
   name               = "${var.environment}-alb"
   internal           = false # 外部のインターネット通信のため
   load_balancer_type = "application"
-  
+
   security_groups = [aws_security_group.alb-sg.id]
 
   subnets = [
@@ -28,7 +28,7 @@ resource "aws_lb_target_group" "web" {
   name     = "${var.environment}-web-tg"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = aws_vpc.main-vpc.id
 
   #　health check: ３０秒ごとにサーバが生きているか確認
   health_check {
