@@ -34,6 +34,9 @@ resource "aws_launch_template" "web_template" {
 
   vpc_security_group_ids = [aws_security_group.private-ec2-sg.id]
 
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_profile.name
+  }  
   user_data = base64encode(
     <<-EOF
         #!/bin/bash
@@ -67,6 +70,7 @@ resource "aws_autoscaling_group" "web_asg" {
     aws_subnet.private-subnets["private-subnet-a"].id,
     aws_subnet.private-subnets["private-subnet-b"].id
   ]
+
 
   launch_template {
     id      = aws_launch_template.web_template.id
