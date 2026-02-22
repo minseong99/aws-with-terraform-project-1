@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
         inputs:
             action:
-                description: 'Nat Gateway 状態選択（true=生成、false=削除）'
+                description: 'Nat Gateway/ASG/Bastion host 状態選択（true=生成、false=削除）'
                 required: true
                 default: 'false'
                 type: choice

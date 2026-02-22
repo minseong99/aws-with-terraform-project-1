@@ -18,7 +18,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "bastion" {
   count         = var.enable-compute ? 1 : 0
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   subnet_id     = aws_subnet.public-subnets["public-subnet-b"].id
 
   vpc_security_group_ids = [aws_security_group.bastion-sg.id]
@@ -30,7 +30,7 @@ resource "aws_instance" "bastion" {
 resource "aws_launch_template" "web_template" {
   name_prefix   = "${var.environment}-web-template-"
   image_id      = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   vpc_security_group_ids = [aws_security_group.private-ec2-sg.id]
 
