@@ -7,8 +7,7 @@ resource "aws_lb" "main" {
   name               = "${var.environment}-alb"
   internal           = false # 外部のインターネット通信のため
   load_balancer_type = "application"
-
-  # 앞서 만든 ALB 전용 방화벽 장착
+  
   security_groups = [aws_security_group.alb-sg.id]
 
   subnets = [
