@@ -24,7 +24,7 @@ jobs:
 
     # 環境によって Dynamic directory allocation
     env:
-      TF_WORKING_DIR: ${{ (github.base_ref == 'main' || github.ref_name == 'main') && './workspace/prod' || './workspace/dev'}}
+      TF_WORKING_DIR: ${{ (github.base_ref == 'main' || github.ref_name == 'main') && './env/prod' || './env/dev'}}
 
     # 作業デイレクトの指定
     defaults:
