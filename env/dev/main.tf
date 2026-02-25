@@ -22,19 +22,6 @@ terraform {
   }
 }
 
-variable "enable-nat-gateway" {
-  description = "NAT Gateway enable"
-  type        = bool
-  default     = false
-}
-
-variable "enable-compute" {
-  description = "EC2およびASG enable"
-  type        = bool
-  default     = false
-}
-
-
 module "dev-infra" {
   source = "../../modules/project1_infra"
 
