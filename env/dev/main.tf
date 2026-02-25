@@ -25,7 +25,7 @@ terraform {
 variable "enable-nat-gateway" {
   description = "NAT Gateway enable"
   type        = bool
-  default     = false 
+  default     = false
 }
 
 variable "enable-compute" {

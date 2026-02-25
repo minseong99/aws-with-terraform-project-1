@@ -25,7 +25,7 @@ terraform {
 variable "enable-nat-gateway" {
   description = "NAT Gateway enable"
   type        = bool
-  default     = false 
+  default     = false
 }
 
 variable "enable-compute" {
@@ -41,5 +41,5 @@ module "prod-infra" {
   environment = "prod"
 
   enable-nat-gateway = var.enable-nat-gateway
-  enable-compute = var.enable-compute
+  enable-compute     = var.enable-compute
 }
