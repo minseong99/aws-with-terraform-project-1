@@ -102,6 +102,10 @@ jobs:
           echo "- **主な原因:** IAM権限（Role）の不足、または既存のAWSリソースとの深刻な競合。" >> $GITHUB_STEP_SUMMARY
           echo "- **解決策:** AWSの認証情報（OIDC）とTerraformの状態ファイル（tfstate）を確認してください。" >> $GITHUB_STEP_SUMMARY
       
+      # For debug
+      - name: Who am I? (AWSアカウント確認)
+        run: aws sts get-caller-identity
+
       # 8-1　本番環境への適用
       - name: Terraform Apply
         id: apply
