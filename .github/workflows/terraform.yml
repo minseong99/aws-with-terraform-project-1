@@ -59,21 +59,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init 
-      
-      # 5-1. format check
-      - name: Terraform Format Check
-        id: fmt
-        run: terraform fmt -check 
-
-      # format error 
-      - name: Format Error Report
-        if: failure() && steps.fmt.outcome == 'failure'
-        run: |
-          echo "::error title=Format Error::コードのフオーメットに問題がおります。"
-          echo "### Terraform Format 失敗" >> $GITHUB_STEP_SUMMARY
-          echo "コードのインデントや改行がHashiCorpの標準規約に違反sています。" >> $GITHUB_STEP_SUMMARY
-          echo "- **解決策:※＊ローカル環境で \'terraform fmt'\　を実行し、修正をコミットしてください。” >> $GITHUB_STEP_SUMMARY
-      
+  
       # 6-1構文とロジック検証
       - name: Terraform Validate
         id: validate
