@@ -1,23 +1,2 @@
-# Terraform & Provider versions
-terraform {
-  required_version = "~>1.14.0"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "6.33.0"
-    }
-  }
-}
 
-provider "aws" {
-  region = var.aws-region
-  # profile = var.aws-profile
 
-  default_tags {
-    tags = {
-      Project     = var.aws-profile
-      Environment = "Dev"
-      ManagedBy   = "terraform"
-    }
-  }
-}
