@@ -26,8 +26,8 @@ terraform {
 module "dev-infra" {
   source = "../../modules/project1_infra"
 
-  aws-region = "ap-northeast-1" 
-  environment = "dev"
+  aws-region         = "ap-northeast-1"
+  environment        = "dev"
   enable-nat-gateway = true
-  enable-compute = true
+  enable-compute     = true
 }

@@ -26,6 +26,6 @@ terraform {
 module "dev-infra" {
   source = "../../modules/project1_infra"
 
-  aws-region = "ap-northeast-1" 
+  aws-region  = "ap-northeast-1"
   environment = "prod"
 }
