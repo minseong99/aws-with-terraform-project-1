@@ -42,11 +42,11 @@ resource "aws_launch_template" "web_template" {
         #!/bin/bash
 
         apt-get update -y
-        apt-get install -y nginx
-        
-        echo "<h1>Hello from ASG Web Server! My Hostname is $(hostname -f)</h1>" > /var/www/html/index.html
-        systemctl start nginx
-        systemctl enable nginx
+        apt-get install -y git docker.io docker-compose-v2
+
+        systemctl start docker
+        systemctl enable docker
+        usermode -aG docker ubuntu
         EOF
   )
 

@@ -69,7 +69,7 @@ jobs:
         if: failure() && steps.validate.outcome == 'failure'
         run: |
           echo "::error title=Validation Error::変数の未定義や構文エラーなどの論理的な欠陥があります。"
-          echo "### 🚨 Terraform Validate 失敗 (논리 문법 실패)" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚨 Terraform Validate 失敗 " >> $GITHUB_STEP_SUMMARY
           echo "記述された \`.tf\` ファイル内に致命的な構文エラー（Syntax Error）が含まれています。" >> $GITHUB_STEP_SUMMARY
           echo "- **主な原因:** 存在しない変数の参照、タイポ、必須パラメータの欠落など。" >> $GITHUB_STEP_SUMMARY
           echo "- **解決策:** ターミナルのログ（Raw Log）を確認し、該当行のコードを修正してください。" >> $GITHUB_STEP_SUMMARY
@@ -83,7 +83,7 @@ jobs:
         if: failure() && steps.plan.outcome == 'failure'
         run: |
           echo "::error title=Plan Error::AWS APIとの通信エラー、または権限不足が発生しました。"
-          echo "### 🚨 Terraform Plan 失敗 (계획 생성 실패)" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚨 Terraform Plan 失敗 " >> $GITHUB_STEP_SUMMARY
           echo "AWS環境のリソース状態を読み取る際、または変更を計画する際にエラーが発生しました。" >> $GITHUB_STEP_SUMMARY
           echo "- **主な原因:** IAM権限（Role）の不足、または既存のAWSリソースとの深刻な競合。" >> $GITHUB_STEP_SUMMARY
           echo "- **解決策:** AWSの認証情報（OIDC）とTerraformの状態ファイル（tfstate）を確認してください。" >> $GITHUB_STEP_SUMMARY
@@ -102,7 +102,7 @@ jobs:
         if: failure() && steps.apply.outcome == 'failure'
         run: |
           echo "::error title=Apply Error::インフラの構築中に致命的な障害が発生しました。即時対応が必要です。"
-          echo "### 💥 Terraform Apply 失敗 (배포 치명적 실패)" >> $GITHUB_STEP_SUMMARY
+          echo "### 💥 Terraform Apply 失敗 " >> $GITHUB_STEP_SUMMARY
           echo "インフラのプロビジョニング中にAWS側でエラーが発生し、デプロイが中断されました。" >> $GITHUB_STEP_SUMMARY
           echo "- **影響:** システムが不完全な状態（Partial State）になっている可能性があります。" >> $GITHUB_STEP_SUMMARY
           echo "- **緊急措置:** AWSマネジメントコンソール及びログを直ちに確認し、手動でのロールバックまたは修正を行ってください。" >> $GITHUB_STEP_SUMMARY
