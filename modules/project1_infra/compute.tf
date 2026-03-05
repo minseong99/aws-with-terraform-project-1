@@ -40,6 +40,10 @@ resource "aws_launch_template" "web_template" {
   user_data = base64encode(
     <<-EOF
         #!/bin/bash
+        until ping -c1 8.8.8.8 &> /dev/null; do
+          echo "インターネットの接続を待機しています。"
+          sleep 5
+        done
 
         apt-get update -y
         apt-get install -y git docker.io docker-compose-v2
@@ -82,4 +86,10 @@ resource "aws_autoscaling_group" "web_asg" {
 
   health_check_grace_period = 300
   health_check_type         = "EC2"
+
+  # EC2がNat gatewayより素早く作られるのでuser_dataでインタネット接続ができない問題を予防
+  depends_on = [ 
+    aws_nat_gateway.ng-public-a,
+    aws_route.private-nat-access
+   ]
 }
