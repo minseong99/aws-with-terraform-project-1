@@ -39,6 +39,13 @@ resource "aws_lb_target_group" "web" {
     interval            = 30
     matcher             = "200"
   }
+
+  # 1日間同じユーザからのアクセスは同じEC2インスタンスに接続するためのstickiess session
+  stickiness {
+    type = "lb_cookie"
+    cookie_duration = 86400 # 1日
+    enabled = true
+  }
 }
 
 # ==============================================================================
