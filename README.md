@@ -4,6 +4,12 @@
 本プロジェクトは、AWS上に可用性・セキュア・コスト最適化を考慮したモダンな3-Tierアーキテクチャを構築したものです。
 インフラのプロビジョニングには **Terraform** を用いてIaC（Infrastructure as Code）を完全自動化し、**GitHub Actions** と連携することで、安全かつ効率的なCI/CDパイプラインを実装しています。
 
+さらに、本基盤は　**コンテナ化されたアプリケーション（別リポジトリで管理）を全自動で受け入れるための統合基盤（Project 3フェーズ）**　として設計されています。インフラ（Terraform）とアプリケーション（Docker/CI/CD）の関心を完全に分離し、モダンなDevOps運用を実現しています。
+
+> 📦 **Application Repository (Project 2):** [https://github.com/minseong99/Monitoring-docker-project-2]
+> コンテナとEC2インスタンスの監視システム（Docker/Grafana/cAdvisor/node-exporter/nginx/prometheus）および、SSMを利用した本インフラへの自動デプロイパイプラインのコードはこちらのリポジトリで管理しています。
+
+
 ### アーキテクチャのイメージ
 <img width="1171" height="601" alt="final drawio (1)" src="https://github.com/user-attachments/assets/7c760101-8f81-4007-b1fb-ef900fc4e605" />
 
@@ -37,6 +43,16 @@
 ### 4. `Bootstrap`:事前準備  とセキュアなState管理
 * **OIDCとCI/CDの基盤構築**: CI/CDパイプラインを構築するための事前準備として、OIDC連携用のIAM Roleをローカル環境から初期構築（`Bootstrap`）しました。これにより、dev/prod環境への git push をトリガーとして、`validate から plan、apply` までが自動的に実行されるパイプライン（`terraform.yml`）の安全な認証基盤を確立しています。
 * **State Lockingの実装**: TerraformのStateファイル（`.tfstate`）を安全に一元管理するため、S3バケットを初期構築しました。さらに、デプロイ時の競合や状態破損を防ぐため（`State Locking`）、DynamoDBテーブルも併せて構築し、堅牢なIaC運用基盤を実現しています。
+
+### 5. 「関心の分離」によるアプリとインフラの別々のデプロイ
+* **課題:** インフラのコードとアプリケーションのコードを同一リポジトリ・同一パイプラインで管理すると、アプリの軽微な修正でインフラ全体が意図せず変更されるリスクや、デプロイ時間の増加を招きます。
+* **解決策:** インフラ（このリポジトリ）とアプリケーション[https://github.com/minseong99/Monitoring-docker-project-2] のリポジトリを完全に分割しました。Terraformの `user_data` では、OSの初期設定と必須ツール（Docker/Git）のインストールのみを実行します。アプリケーショの最新化やコンテナの起動は、別リポジトリのGitHub Actionsが **AWS Systems Manager (SSM) Run Command** を通じて、SSHポート（22番）を一切開けずにプライベートサブネット内のEC2へ安全にPull型デプロイを行うセキュアなアーキテクチャを実現しました。
+
+### 6. ALB環境下におけるステートフルアプリケーションの運用課題解決
+* **課題:** ALB（ロードバランサー）の背後にGrafanaなどの「ログイン状態（セッション）を持つステートフルなアプリケーション」を複数ノード（ASG）で配置した際、ALBのラウンドロビンによるリクエストの振り分けやIPの変動により、セッションが断絶し「ログインループ（Unauthorizedエラー）」が発生しました。
+* **解決策（トラブルシューティング）:**
+  コンテナ内のログをSSMセッションマネージャーから直接解析し(`docker compose logs grafana`)、認証自体は成功しているものの、ノードの切り替わりによるセッションの不整合が原因であると特定しました。
+  これを解決するため、Terraform側でALBのTarget Groupに **Sticky Session（スティッキーセッション）** を有効化してユーザーとノードを固定し、同時にアプリケーションのNginx設定にて `X-Forwarded-For` ヘッダーを用いて正しいクライアントIPをGrafanaに透過させることで、見事にエラーを解消しました。
 
 
 ---
