@@ -46,7 +46,7 @@ resource "aws_launch_template" "web_template" {
 
         systemctl start docker
         systemctl enable docker
-        usermode -aG docker ubuntu
+        usermod -aG docker ubuntu
         EOF
   )
 
