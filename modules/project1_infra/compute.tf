@@ -40,6 +40,8 @@ resource "aws_launch_template" "web_template" {
   user_data = base64encode(
     <<-EOF
         #!/bin/bash
+
+        # interent 接続を確認
         until ping -c1 8.8.8.8 &> /dev/null; do
           echo "インターネットの接続を待機しています。"
           sleep 5
