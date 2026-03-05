@@ -25,6 +25,7 @@ resource "aws_lb" "main" {
 # ==============================================================================
 
 resource "aws_lb_target_group" "web" {
+  count = var.enable-compute ? 1 : 0
   name     = "${var.environment}-web-tg"
   port     = 80
   protocol = "HTTP"
