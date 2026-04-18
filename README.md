@@ -1,4 +1,4 @@
-# AWS 3-Tier アーキテクチャ設計および構築 (Terraform 完全自動化・FinOps対応)
+<img width="1221" height="601" alt="제목 없는 다이어그램 drawio" src="https://github.com/user-attachments/assets/cd9769a8-6f06-49c9-816c-f1a833a7dbe0" /># AWS 3-Tier アーキテクチャ設計および構築 (Terraform 完全自動化・FinOps対応)
 
 ## プロジェクトの概要
 本プロジェクトは、AWS上に可用性・セキュア・コスト最適化を考慮したモダンな3-Tierアーキテクチャを構築したものです。
@@ -6,12 +6,13 @@
 
 さらに、本基盤は　**コンテナ化されたアプリケーション（別リポジトリで管理）を全自動で受け入れるための統合基盤（Project 3フェーズ）**　として設計されています。インフラ（Terraform）とアプリケーション（Docker/CI/CD）の関心を完全に分離し、モダンなDevOps運用を実現しています。
 
-> 📦 **Application Repository (Project 2):** [https://github.com/minseong99/Monitoring-docker-project-2]
+> **Application Repository (Project 2):** [https://github.com/minseong99/Monitoring-docker-project-2]
 > コンテナとEC2インスタンスの監視システム（Docker/Grafana/cAdvisor/node-exporter/nginx/prometheus）および、SSMを利用した本インフラへの自動デプロイパイプラインのコードはこちらのリポジトリで管理しています。
 
 
 ### アーキテクチャのイメージ
-<img width="1171" height="601" alt="final drawio (1)" src="https://github.com/user-attachments/assets/7c760101-8f81-4007-b1fb-ef900fc4e605" />
+<img width="1221" height="601" alt="cloud architecture" src="https://github.com/user-attachments/assets/d1936714-8967-4dcd-8163-2d91a7afd09a" />
+
 
 ---
 
