@@ -11,7 +11,8 @@
 
 
 ### アーキテクチャのイメージ
-<img width="1221" height="601" alt="cloud architecture" src="https://github.com/user-attachments/assets/d1936714-8967-4dcd-8163-2d91a7afd09a" />
+<img width="1221" height="601" alt="1 drawio" src="https://github.com/user-attachments/assets/bb160cc4-4dd7-4359-9863-62535cf9d4ce" />
+
 
 
 ---
