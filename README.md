@@ -4,7 +4,7 @@
 本プロジェクトは、AWS上に可用性・セキュア・コスト最適化を考慮したモダンな3-Tierアーキテクチャを構築したものです。
 インフラのプロビジョニングには **Terraform** を用いてIaC（Infrastructure as Code）を完全自動化し、**GitHub Actions** と連携することで、安全かつ効率的なCI/CDパイプラインを実装しています。
 
-さらに、本基盤は　**コンテナ化されたアプリケーション（別リポジトリで管理）を全自動で受け入れるための統合基盤（Project 3フェーズ）**　として設計されています。インフラ（Terraform）とアプリケーション（Docker/CI/CD）の関心を完全に分離し、モダンなDevOps運用を実現しています。
+さらに、本基盤は　**コンテナ化されたアプリケーション（別リポジトリで管理）を全自動で受け入れるための統合基盤（Project 2フェーズ）**　として設計されています。インフラ（Terraform）とアプリケーション（Docker/CI/CD）の関心を完全に分離し、モダンなDevOps運用を実現しています。
 
 > **Application Repository (Project 2):** [https://github.com/minseong99/Monitoring-docker-project-2]
 > コンテナとEC2インスタンスの監視システム（Docker/Grafana/cAdvisor/node-exporter/nginx/prometheus）および、SSMを利用した本インフラへの自動デプロイパイプラインのコードはこちらのリポジトリで管理しています。
